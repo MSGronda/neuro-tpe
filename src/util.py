@@ -1,10 +1,12 @@
+import csv
 import os.path
-
 import requests
+
+DATASET_PATH = "../dataset"
 
 
 def download_dataset():
-    if os.path.exists("../dataset/g1.csv"):
+    if os.path.exists(f"{DATASET_PATH}/g1.csv"):
         return
 
     urls = [
@@ -20,6 +22,40 @@ def download_dataset():
         if response.status_code != 200:
             raise ValueError("No pudo descargar el archivo")
 
-        with open(f"../dataset/g{i+1}.csv", 'wb') as file:
+        with open(f"{DATASET_PATH}/g{i+1}.csv", 'wb') as file:
             for chunk in response.iter_content(1024):
                 file.write(chunk)
+
+
+def load_data(filename):
+    data = []
+    with open(filename, 'r') as file:
+        reader = csv.reader(file)
+
+        # Levantamos los canales del header
+        for channel in next(reader):
+            if channel != "":
+                data.append((channel, []))
+
+        # Levantamos la data para cada canal
+        for row in reader:
+            for i, value in enumerate(row):
+                if value != "":
+                    data[i][1].append(float(value))
+
+    resp = {}
+    for datum in data:
+        resp[datum[0]] = datum[1]
+
+    return resp
+
+
+def load_all_data():
+    data = []
+    for filename in os.listdir(DATASET_PATH):
+        if filename.endswith(".csv"):
+            data.append(load_data(f"{DATASET_PATH}/{filename}"))
+
+    return data
+
+
