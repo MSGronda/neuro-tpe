@@ -1,5 +1,9 @@
+import os
+
 import numpy as np
 import scipy.signal as sig
+from src.util import dump_processed_data, PROCESSED_PATH, load_processed_data
+
 
 # = = = = Procedimiento = = = =
 # Siempre le pasamos los channels por separado
@@ -10,6 +14,35 @@ import scipy.signal as sig
 # Con las bandas, aplico area_psd a cada una => ese area es la potencia para ese ritmo, para ese canal.
 # Tomo el area de toooodo y obtengo la potencia total.
 # A cada potencia, lo divido por la potencia total => potencia relativa.
+
+def process_data(dataset: [], sampling_rate: int, segment_length: int):
+    # Evitamos re-procesar los datos
+    if os.path.exists(f"{PROCESSED_PATH}/g1.json"):
+        return load_processed_data()
+
+    # Procesamos los datos
+    processed_dataset = []
+    for data in dataset:
+        data_by_channel = {}
+        for key, value in data.items():
+            freq, psd = apply_fft(value, sampling_rate, segment_length)
+            band_freq, band_psd = divide_bands(freq, psd)
+            total_area_psd = area_under_psd(freq, psd)
+
+            relative_psd = []
+
+            for freq, psd in zip(band_freq, band_psd):
+                relative_psd.append(area_under_psd(freq, psd) / total_area_psd)
+
+            data_by_channel[key] = relative_psd
+
+        processed_dataset.append(data_by_channel)
+
+    # Bajamos a disco
+    dump_processed_data(processed_dataset)
+
+    return processed_dataset
+
 
 
 def apply_fft(signal: [], sampling_rate, segment_length):
@@ -34,6 +67,8 @@ FREQUENCY_BANDS_INDEX = {
     'Gamma': 5,
 }
 NAME = 0
+
+
 RANGE = 1
 
 
@@ -55,4 +90,3 @@ def divide_bands(frequencies: [], psd: []):
 
 def area_under_psd(frequencies: [],  psd: []):
     return np.trapz(psd, frequencies)
-

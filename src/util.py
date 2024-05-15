@@ -6,6 +6,7 @@ import requests
 DATASET_PATH = "../dataset"
 PROCESSED_PATH = "../processed-data"
 
+
 def download_dataset():
     if os.path.exists(f"{DATASET_PATH}/g1.csv"):
         return
@@ -51,7 +52,7 @@ def load_data(filename):
     return resp
 
 
-def load_all_data():
+def load_dataset():
     data = []
     for filename in os.listdir(DATASET_PATH):
         if filename.endswith(".csv"):
@@ -65,3 +66,12 @@ def dump_processed_data(processed_dataset: []):
         with open(f"{PROCESSED_PATH}/g{i+1}.json", "w") as file:
             json.dump(data_by_channel, file)
 
+
+def load_processed_data():
+    processed_data = []
+    for filename in os.listdir(PROCESSED_PATH):
+        if filename.endswith(".json"):
+            with open(f"{PROCESSED_PATH}/{filename}", "r") as file:
+                processed_data.append(json.load(file))
+
+    return processed_data
