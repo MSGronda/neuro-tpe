@@ -1,9 +1,10 @@
 import csv
+import json
 import os.path
 import requests
 
 DATASET_PATH = "../dataset"
-
+PROCESSED_PATH = "../processed-data"
 
 def download_dataset():
     if os.path.exists(f"{DATASET_PATH}/g1.csv"):
@@ -58,4 +59,9 @@ def load_all_data():
 
     return data
 
+
+def dump_processed_data(processed_dataset: []):
+    for i, data_by_channel in enumerate(processed_dataset):
+        with open(f"{PROCESSED_PATH}/g{i+1}.json", "w") as file:
+            json.dump(data_by_channel, file)
 

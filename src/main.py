@@ -24,9 +24,11 @@ if __name__ == '__main__':
             for freq, psd in zip(band_freq, band_psd):
                 relative_psd.append(area_under_psd(freq, psd) / total_area_psd)
 
-            data_by_channel[key] = np.array(relative_psd)
+            data_by_channel[key] = relative_psd
 
         processed_dataset.append(data_by_channel)
+
+    dump_processed_data(processed_dataset)
 
     heatmap(processed_dataset[0], FREQUENCY_BANDS_INDEX['Sigma'])
 
