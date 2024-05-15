@@ -25,6 +25,14 @@ FREQUENCY_BANDS = [
     ('Beta', (15, 30)),
     ('Gamma', (30, 100)),
 ]
+FREQUENCY_BANDS_INDEX = {
+    'Delta': 0,
+    'Theta': 1,
+    'Alpha': 2,
+    'Sigma': 3,
+    'Beta': 4,
+    'Gamma': 5,
+}
 NAME = 0
 RANGE = 1
 
