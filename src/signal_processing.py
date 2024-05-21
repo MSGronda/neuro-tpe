@@ -1,9 +1,7 @@
 import os
-
 import numpy as np
 import scipy.signal as sig
-from src.util import dump_processed_data, PROCESSED_PATH, load_processed_data
-
+from src.util import dump_processed_data, PROCESSED_PATH, load_processed_data, download_dataset, load_dataset
 
 # = = = = Procedimiento = = = =
 # Siempre le pasamos los channels por separado
@@ -14,6 +12,17 @@ from src.util import dump_processed_data, PROCESSED_PATH, load_processed_data
 # Con las bandas, aplico area_psd a cada una => ese area es la potencia para ese ritmo, para ese canal.
 # Tomo el area de toooodo y obtengo la potencia total.
 # A cada potencia, lo divido por la potencia total => potencia relativa.
+
+
+def load_and_process_data(sampling_rate: int, segment_length: int):
+    if os.path.exists(f"{PROCESSED_PATH}/g1.json"):
+        return load_processed_data()
+
+    download_dataset()
+    dataset = load_dataset()
+
+    return process_data(dataset, sampling_rate, segment_length)
+
 
 def process_data(dataset: [], sampling_rate: int, segment_length: int):
     # Evitamos re-procesar los datos
