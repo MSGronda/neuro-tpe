@@ -1,7 +1,9 @@
 import os
 import numpy as np
 import scipy.signal as sig
-from src.util import dump_processed_data, PROCESSED_PATH, load_processed_data, download_dataset, load_dataset
+from src.util import dump_processed_data, PROCESSED_PATH, load_processed_data, download_dataset, load_dataset, \
+    PROCESSED_FILE_FORMAT, processed_data_already_exists
+
 
 # = = = = Procedimiento = = = =
 # Siempre le pasamos los channels por separado
@@ -15,7 +17,8 @@ from src.util import dump_processed_data, PROCESSED_PATH, load_processed_data, d
 
 
 def load_and_process_data(sampling_rate: int, segment_length: int):
-    if os.path.exists(f"{PROCESSED_PATH}/g1.json"):
+    # Evitamos re-procesar los datos
+    if processed_data_already_exists():
         return load_processed_data()
 
     download_dataset()
@@ -26,7 +29,7 @@ def load_and_process_data(sampling_rate: int, segment_length: int):
 
 def process_data(dataset: [], sampling_rate: int, segment_length: int):
     # Evitamos re-procesar los datos
-    if os.path.exists(f"{PROCESSED_PATH}/g1.json"):
+    if processed_data_already_exists():
         return load_processed_data()
 
     # Procesamos los datos
@@ -51,7 +54,6 @@ def process_data(dataset: [], sampling_rate: int, segment_length: int):
     dump_processed_data(processed_dataset)
 
     return processed_dataset
-
 
 
 def apply_fft(signal: [], sampling_rate, segment_length):
