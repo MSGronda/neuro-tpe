@@ -13,7 +13,7 @@ def download_dataset():
     if dataset_already_exists():
         return
 
-    print("\nDownloading dataset. This may take a bit...\n")
+    print("Downloading dataset. This may take a bit...")
 
     url = "https://drive.usercontent.google.com/download?id=1T9xzczygDEIlnpubTg5UJGOoh5uj2QcQ&export=download&authuser=0&confirm=t&uuid=1bad2bc0-c7ef-45b1-8b96-467b13540475&at=APZUnTWR2ZH4AtPcT7baehHKJMPS:1716313011773"
 
@@ -58,6 +58,7 @@ def load_data(filename):
 
 
 def load_dataset():
+    print("Loading dataset...")
     data = []
     classes = []
     for filename in os.listdir(DATASET_PATH):

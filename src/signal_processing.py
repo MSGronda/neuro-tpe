@@ -58,6 +58,8 @@ def partition_dataset(dataset: [{}], classes: [], clip_size: int):
 
 
 def process_data(dataset: [], classes: [], sampling_rate: int, segment_length: int):
+    print("Processing data...")
+
     # Evitamos re-procesar los datos
     if processed_data_already_exists():
         return load_processed_data()
@@ -92,20 +94,18 @@ def apply_fft(signal: [], sampling_rate, segment_length):
 
 
 FREQUENCY_BANDS = [
-    ('Delta', (0.5, 4)),
-    ('Theta', (4, 8)),
-    ('Alpha', (8, 13)),
-    ('Sigma', (13, 15)),
-    ('Beta', (15, 30)),
+    ('Delta', (0, 4)),
+    ('Theta', (4, 7)),
+    ('Alpha', (8, 12)),
+    ('Beta', (12, 30)),
     ('Gamma', (30, 100)),
 ]
 FREQUENCY_BANDS_INDEX = {
     'Delta': 0,
     'Theta': 1,
     'Alpha': 2,
-    'Sigma': 3,
-    'Beta': 4,
-    'Gamma': 5,
+    'Beta': 3,
+    'Gamma': 4,
 }
 NAME = 0
 

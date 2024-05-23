@@ -19,16 +19,12 @@ def apply_pca(dataset: [np.array], n_components=None):
 
     for matrix in dataset:
 
-        # TODO CHECK: sobre que hacemos la reduccion, los canales o las potencias relativas ?
-
         if n_components is None:
             pca = PCA(n_components=len(matrix[0]))
         else:
             pca = PCA(n_components)
 
-        pca.fit(matrix)
-
-        transformed.append(pca.transform(matrix))
+        transformed.append(pca.fit_transform(matrix))
         explained_variance_ratios.append(pca.explained_variance_ratio_)
 
     return transformed, explained_variance_ratios
