@@ -6,7 +6,7 @@ import zipfile
 
 DATASET_PATH = "../dataset"
 PROCESSED_PATH = "../processed-data"
-PROCESSED_FILE_FORMAT = "Processed.json"
+PROCESSED_FILE_FORMAT = "processed.json"
 
 
 def download_dataset():
@@ -59,31 +59,25 @@ def load_data(filename):
 
 def load_dataset():
     data = []
+    classes = []
     for filename in os.listdir(DATASET_PATH):
         if filename.endswith(".csv"):
             data.append(load_data(f"{DATASET_PATH}/{filename}"))
+            classes.append(int(filename[4]) - 1)
 
-    return data
+    return data, classes
 
 
-def dump_processed_data(processed_dataset: []):
-    j = 0
-    for i, data_by_channel in enumerate(processed_dataset):
-        with open(f"{PROCESSED_PATH}/S{j}G{i % 4}{PROCESSED_FILE_FORMAT}", "w") as file:
-            json.dump(data_by_channel, file)
-
-        if i % 4 == 0:
-            j += 1
+def dump_processed_data(processed_dataset: [], classes: []):
+    with open(f"{PROCESSED_PATH}/{PROCESSED_FILE_FORMAT}", "w") as file:
+        json.dump({"processed": processed_dataset, "classes": classes}, file)
 
 
 def load_processed_data():
-    processed_data = []
-    for filename in os.listdir(PROCESSED_PATH):
-        if filename.endswith(PROCESSED_FILE_FORMAT):
-            with open(f"{PROCESSED_PATH}/{filename}", "r") as file:
-                processed_data.append(json.load(file))
+    with open(f"{PROCESSED_PATH}/{PROCESSED_FILE_FORMAT}", "r") as file:
+        obj = json.load(file)
 
-    return processed_data
+        return obj["processed"], obj["classes"]
 
 
 def dataset_already_exists():
@@ -91,4 +85,4 @@ def dataset_already_exists():
 
 
 def processed_data_already_exists():
-    return os.path.exists(f"{PROCESSED_PATH}/S1G1{PROCESSED_FILE_FORMAT}")
+    return os.path.exists(f"{PROCESSED_PATH}/{PROCESSED_FILE_FORMAT}")

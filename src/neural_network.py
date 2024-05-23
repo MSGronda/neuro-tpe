@@ -19,6 +19,7 @@ def train_model(X_train, y_train, batch_size: int, epochs: int):
         layers.Input(shape=X[0].shape),
         layers.Dense(64, activation='relu'),
         layers.Dense(32, activation='relu'),
+        layers.Dense(32, activation='relu'),
         layers.Dense(4, activation='softmax')
     ])
 
