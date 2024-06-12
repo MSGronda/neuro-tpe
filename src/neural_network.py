@@ -1,13 +1,16 @@
 import numpy as np
 from keras import Sequential, layers
-from keras.src.layers import SimpleRNN, Dense
-from sklearn.preprocessing import OneHotEncoder
+import tensorflow as tf
 
 NUM_CLASSES = 4
 
 
 def convert_to_array(dataset: [np.array]):
     return np.array([data.flatten() for data in dataset]).astype("float32")
+
+
+def convert_to_single_array(x: np.array):
+    return np.array(x.flatten()).reshape(1, -1)
 
 
 def generate_classes(dataset: []):

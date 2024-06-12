@@ -4,6 +4,7 @@ from sklearn.preprocessing import OneHotEncoder
 from signal_processing import *
 from dimension_reduction import *
 from neural_network import *
+from src.lrp import lrp
 
 if __name__ == '__main__':
     clip_length = 15        # En s. Particionamos el dataset en secciones para tener mas datos.
@@ -12,7 +13,7 @@ if __name__ == '__main__':
     n_components = 3        # Cantidad de components para PCA
     test_size = 0.2         # Relacion train-test para la red
     batch_size = 35         # Cantidad de datapoints para cada epoca
-    epochs = 60             # Cantidad de epocas de training para la red
+    epochs = 1             # Cantidad de epocas de training para la red
 
     # Obtenemos el dataset y lo procesamos (aplicando FFT)
     processed_dataset, dataset_classes = load_and_process_data(sampling_rate, segment_length, clip_length)
@@ -28,12 +29,10 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(transformed, dataset_classes, test_size=test_size)
     model = train_model(X_train, y_train, batch_size, epochs)
 
-    # Entrenamos la red recurrente (que no funciona muy bien)
-    # X, y = sequentialize_data(transformed, dataset_classes)
-    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size)
-    # model = train_model_rnn(X_train, y_train, epochs)
-
     # Testeamos la red
     test_loss, test_acc = test_model(X_test, y_test, model)
     print('Test accuracy:', test_acc)
+
+    # Aplicamos el LRP
+    print(lrp(model, convert_to_single_array(X_test[0])))
 
