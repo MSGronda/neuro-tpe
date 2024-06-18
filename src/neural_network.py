@@ -1,9 +1,12 @@
+import logging
+
 import numpy as np
-from keras import Sequential, layers
+from keras import Sequential, layers, Model
 import tensorflow as tf
 
 NUM_CLASSES = 4
 
+tf.get_logger().setLevel(logging.ERROR)     # Si no rompe los huevos con los warnings
 
 def convert_to_array(dataset: [np.array]):
     return np.array([data.flatten() for data in dataset]).astype("float32")
@@ -18,6 +21,9 @@ def generate_classes(dataset: []):
 
 
 def train_model(X_train, y_train, batch_size: int, epochs: int):
+
+    # NO USAR ESTA VERSION. Por mas que parezca que es lo mismo que train_model_alt
+    # Si usas esta, el LRP explota.
 
     X = convert_to_array(X_train)
     y = np.array(y_train).astype("float32")
@@ -38,6 +44,31 @@ def train_model(X_train, y_train, batch_size: int, epochs: int):
     model.fit(X, y, batch_size=batch_size, epochs=epochs)
 
     return model
+
+
+def train_model_alt(X_train, y_train, batch_size: int, epochs: int):
+
+    X = convert_to_array(X_train)
+    y = np.array(y_train).astype("float32")
+
+    input_layer = layers.Input(shape=X[0].shape)
+    i1 = layers.Dense(64, activation='relu')(input_layer)
+    i2 = layers.Dense(32, activation='relu')(i1)
+    i3 = layers.Dense(16, activation='relu')(i2)
+    i4 = layers.Dense(8, activation='relu')(i3)
+    output_layer = layers.Dense(NUM_CLASSES, activation='softmax')(i4)
+
+    model = Model(inputs=input_layer, outputs=output_layer)
+
+    model.compile(optimizer='adam',
+                  loss='sparse_categorical_crossentropy',
+                  metrics=['accuracy']
+    )
+
+    model.fit(X, y, batch_size=batch_size, epochs=epochs)
+
+    return model
+
 
 
 def test_model(X_test, y_test, model):
