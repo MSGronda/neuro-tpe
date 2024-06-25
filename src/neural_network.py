@@ -6,7 +6,8 @@ import tensorflow as tf
 
 NUM_CLASSES = 4
 
-tf.get_logger().setLevel(logging.ERROR)     # Si no rompe los huevos con los warnings
+tf.get_logger().setLevel(logging.ERROR)     # Asi no rompe los huevos con los warnings
+
 
 def convert_to_array(dataset: [np.array]):
     return np.array([data.flatten() for data in dataset]).astype("float32")
@@ -68,7 +69,6 @@ def train_model_alt(X_train, y_train, batch_size: int, epochs: int):
     model.fit(X, y, batch_size=batch_size, epochs=epochs)
 
     return model
-
 
 
 def test_model(X_test, y_test, model):

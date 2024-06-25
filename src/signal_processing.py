@@ -1,8 +1,9 @@
 import os
 import numpy as np
 import scipy.signal as sig
-from src.util import dump_processed_data, PROCESSED_PATH, load_processed_data, download_dataset, load_dataset, \
-    PROCESSED_FILE_FORMAT, processed_data_already_exists
+
+from src.constants import FREQUENCY_BANDS
+from src.util import dump_processed_data, load_processed_data, download_dataset, load_dataset, processed_data_already_exists
 
 
 EEG_LENGTH = 38253
@@ -93,23 +94,8 @@ def apply_fft(signal: [], sampling_rate, segment_length):
     return frequencies, psd_welch
 
 
-FREQUENCY_BANDS = [
-    ('Delta', (0, 4)),
-    ('Theta', (4, 7)),
-    ('Alpha', (8, 12)),
-    ('Beta', (12, 30)),
-    ('Gamma', (30, 100)),
-]
-FREQUENCY_BANDS_INDEX = {
-    'Delta': 0,
-    'Theta': 1,
-    'Alpha': 2,
-    'Beta': 3,
-    'Gamma': 4,
-}
+
 NAME = 0
-
-
 RANGE = 1
 
 

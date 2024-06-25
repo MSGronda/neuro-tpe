@@ -4,6 +4,8 @@ import os.path
 import requests
 import zipfile
 
+from src.constants import FREQUENCY_BANDS, CHANNELS
+
 DATASET_PATH = "../dataset"
 PROCESSED_PATH = "../processed-data"
 PROCESSED_FILE_FORMAT = "processed.json"
@@ -15,7 +17,9 @@ def download_dataset():
 
     print("Downloading dataset. This may take a bit...")
 
-    url = "https://drive.usercontent.google.com/download?id=1T9xzczygDEIlnpubTg5UJGOoh5uj2QcQ&export=download&authuser=0&confirm=t&uuid=1bad2bc0-c7ef-45b1-8b96-467b13540475&at=APZUnTWR2ZH4AtPcT7baehHKJMPS:1716313011773"
+    url = ("https://drive.usercontent.google.com/download?id=1T9xzczygDEIlnpubTg5UJGOoh5uj2QcQ&export=download"
+           "&authuser=0&confirm=t&uuid=1bad2bc0-c7ef-45b1-8b96-467b13540475&at=APZUnTWR2ZH4AtPcT7baehHKJMPS"
+           ":1716313011773")
 
     response = requests.get(url, stream=True)
 
@@ -87,3 +91,13 @@ def dataset_already_exists():
 
 def processed_data_already_exists():
     return os.path.exists(f"{PROCESSED_PATH}/{PROCESSED_FILE_FORMAT}")
+
+
+def generate_component_labels(n_components):
+    if n_components == len(FREQUENCY_BANDS):
+        return [f[0] for f in FREQUENCY_BANDS]
+    return [f"Component {i}" for i in range(n_components)]
+
+
+def generate_channel_labels():
+    return CHANNELS

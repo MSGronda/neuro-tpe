@@ -1,7 +1,11 @@
+import random
+
 from keras import Model
 import numpy as np
-import networkx as nx
-from matplotlib import pyplot as plt
+
+
+X_POS = 0
+Y_POS = 1
 
 
 def get_outputs(model, X):
@@ -37,7 +41,17 @@ def lrp(model, x):
 
     return layer_R
 
-# = = = = = = = = =  GRAPHING = = = = = = = = =
+
+def get_X_of_class_y(X, Y, c, limit=20):
+    resp = []
+
+    for x,y in zip(X, Y):
+        if y == c:
+            resp.append((x, y))
+
+    random.shuffle(resp)
+
+    return resp[:limit]
 
 
 def normalize_r(layer_R):
@@ -58,39 +72,5 @@ def flatten_irregular(relevance_scores):
     return resp
 
 
-def plot_network_graph(layer_R, model):
-    figsize = (40, 40)
-
-    G = nx.DiGraph()
-    layer_sizes = [layer.units for layer in model.layers if 'dense' in layer.name]
-    layer_sizes.insert(0, model.input.shape[1])
-
-    relevance_scores = normalize_r(layer_R)
-
-    max_neurons = max(layer_sizes)
-
-    for i, size in enumerate(layer_sizes):
-        for j in range(size):
-            G.add_node(f'{i}_{j}', layer=i, pos=(i, (max_neurons / (layer_sizes[i] + 2)) * (j+1)))  # Super secret sauce that give cool spacing
-
-    for i in range(len(layer_sizes) - 1):
-        for j in range(layer_sizes[i]):
-            for k in range(layer_sizes[i+1]):
-                G.add_edge(f'{i}_{j}', f'{i+1}_{k}', weight=(relevance_scores[i][j] + relevance_scores[i+1][k]) / 2)
-
-    edges = G.edges(data=True)
-    nodes = G.nodes(data=True)
-
-    pos = {node: (data['layer'], data['pos'][1]) for node, data in nodes}
-
-    plt.figure(figsize=figsize)
-
-    for (u, v), alpha in zip(nodes, flatten_irregular(relevance_scores)):
-        nx.draw_networkx_nodes(G, pos, nodelist=[u], node_size=300, alpha=alpha, node_color='red', linewidths=1, edgecolors='black')
-
-    for (u, v, d), alpha in zip(edges, [edge[2]['weight'] for edge in edges]):
-        nx.draw_networkx_edges(G, pos, edgelist=[(u, v)], width=1, alpha=alpha, edge_color='red', arrows=False)
-
-    plt.title('Neural Network Graph with Relevance Scores')
-    plt.tight_layout()
-    plt.show()
+def normalized_matrix(R, n_components):     # un asquete
+    return np.reshape(np.array(normalize_r([R])), (int(R.shape[1] / n_components), n_components))
