@@ -44,8 +44,6 @@ if __name__ == '__main__':
         # Graficamos la primera layer
         for c in range(n_components):
             heatmap_lrp(R[:, c])
-            heatmap_lrp(R[:, c])
-            heatmap_lrp(R[:, c])
         plot_first_layer_lrp(R, column_label, row_label)
 
         # Graficamos la red entera
