@@ -74,3 +74,16 @@ def flatten_irregular(relevance_scores):
 
 def normalized_matrix(R, n_components):     # un asquete
     return np.reshape(np.array(normalize_r([R])), (int(R.shape[1] / n_components), n_components))
+
+
+def average_lrp(lrp_results):
+    average_matrix = [np.zeros(result.shape) for result in lrp_results[0]]
+
+    for result in lrp_results:
+        for i, lrp in enumerate(result):
+            average_matrix[i] += lrp
+
+    for total_lrp in average_matrix:
+        total_lrp /= len(lrp_results)
+
+    return average_matrix

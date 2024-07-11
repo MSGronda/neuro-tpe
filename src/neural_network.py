@@ -118,5 +118,25 @@ def train_model_rnn(X_train, y_train, epochs):
     return model
 
 
+def normalize_weights(model):
+    # Estoy convencido que este es el peor codigo que escribi en mi vida
+
+    weights = [weight for weight in model.get_weights() if len(weight.shape) != 1]
+
+    min_weight = np.min([item for sublist1 in weights for sublist2 in sublist1 for item in sublist2])
+    max_weight = np.max([item for sublist1 in weights for sublist2 in sublist1 for item in sublist2])
+
+    for i in range(len(weights)):
+        for j in range(len(weights[i])):
+            for k in range(len(weights[i][j])):
+                w = weights[i][j][k]
+                if w > 0:
+                    weights[i][j][k] = weights[i][j][k] / max_weight
+                else:
+                    weights[i][j][k] = (weights[i][j][k] - min_weight) / min_weight
+
+    return weights
+
+
 
 
