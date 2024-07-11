@@ -21,7 +21,10 @@ def get_outputs(model, X):
 def lrp_dense(layer, R, inputs):
     W = layer.get_weights()[0]
     V = np.maximum(W, 0.0)
-    Z = np.dot(inputs, V) + 1e-9 * np.sign(np.dot(inputs, V))
+
+    z1 = np.dot(inputs, V)
+    Z = z1 + 1e-9 * np.sign(z1)
+
     S = R / Z
     C = np.dot(S, np.transpose(V))
     return inputs * C
@@ -78,6 +81,9 @@ def normalized_matrix(R, n_components):     # un asquete
 
 def average_lrp(lrp_results):
     average_matrix = [np.zeros(result.shape) for result in lrp_results[0]]
+    variance_matrix = [np.zeros(result.shape) for result in lrp_results[0]]
+
+    # calculamos el promedio
 
     for result in lrp_results:
         for i, lrp in enumerate(result):
@@ -86,4 +92,12 @@ def average_lrp(lrp_results):
     for total_lrp in average_matrix:
         total_lrp /= len(lrp_results)
 
-    return average_matrix
+    # calculamos el desvio estandar
+    for result in lrp_results:
+        for i, lrp in enumerate(result):
+            variance_matrix[i] += (lrp - average_matrix[i]) ** 2
+
+    for total_lrp in average_matrix:
+        total_lrp /= len(lrp_results) - 1
+
+    return average_matrix, variance_matrix

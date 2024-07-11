@@ -93,7 +93,7 @@ def plot_network_graph(model):
     plt.show()
 
 
-def plot_relevance_network_graph(layer_R, model):
+def plot_relevance_network_graph(layer_R, model, color='red'):
     figsize = (40, 40)
 
     G = nx.DiGraph()
@@ -126,11 +126,10 @@ def plot_relevance_network_graph(layer_R, model):
     plt.figure(figsize=figsize)
 
     for (u, v), alpha in zip(nodes, flatten_irregular(relevance_scores)):
-        nx.draw_networkx_nodes(G, pos, nodelist=[u], node_size=300, alpha=alpha, node_color='red', linewidths=1,
-                               edgecolors='black')
+        nx.draw_networkx_nodes(G, pos, nodelist=[u], node_size=300, alpha=alpha, node_color=color, linewidths=1, edgecolors='black')
 
     for (u, v, d), alpha in zip(edges, [edge[2]['weight'] for edge in edges]):
-        nx.draw_networkx_edges(G, pos, edgelist=[(u, v)], width=1, alpha=alpha, edge_color='red', arrows=False)
+        nx.draw_networkx_edges(G, pos, edgelist=[(u, v)], width=1, alpha=alpha, edge_color=color, arrows=False)
 
     plt.tight_layout()
     plt.show()

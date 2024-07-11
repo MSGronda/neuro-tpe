@@ -53,6 +53,7 @@ if __name__ == '__main__':
         # Graficamos la red entera
         plot_relevance_network_graph(lrp_results[i], model)
 
-    plot_relevance_network_graph(average_lrp(lrp_results), model)
+    average, variance = average_lrp(lrp_results)
 
-
+    plot_relevance_network_graph(average, model)
+    plot_relevance_network_graph(variance, model, 'blue')
