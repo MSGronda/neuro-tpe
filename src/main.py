@@ -14,7 +14,7 @@ if __name__ == '__main__':
     test_size = 0.2         # Relacion train-test para la red
     batch_size = 35         # Cantidad de datapoints para cada epoca
     epochs = 60             # Cantidad de epocas de training para la red
-    lrp_class = 1           # Una de las 4 clases de datos (valores de y)
+    lrp_class = 1           # Una de las 4 clases de datos (0, 1, 2, 3)
 
     # Obtenemos el dataset y lo procesamos (aplicando FFT)
     processed_dataset, dataset_classes = load_and_process_data(sampling_rate, segment_length, clip_length)
@@ -42,16 +42,15 @@ if __name__ == '__main__':
     lrp_results = [lrp(model, convert_to_single_array(test[X_POS])) for test in test_subset]
 
     for i in range(0, 4):
-        # R = normalized_matrix(lrp_results[i][-1], n_components)
+        # Graficamos la red entera
+        plot_relevance_network_graph(lrp_results[i], model)
 
         # Graficamos la primera layer
+        # R = normalized_matrix(lrp_results[i][-1], n_components)
         # for c in range(n_components):
         #     heatmap_lrp(R[:, c])
         # column_label, row_label = generate_component_labels(n_components), generate_channel_labels()
         # plot_first_layer_lrp(R, column_label, row_label)
-
-        # Graficamos la red entera
-        plot_relevance_network_graph(lrp_results[i], model)
 
     average, variance = average_lrp(lrp_results)
 

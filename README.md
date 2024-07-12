@@ -27,10 +27,11 @@ En el archivo `main.py`, se definen las siguientes constantes, las cuales se pue
 clip_length = 15        # En s. Particionamos el dataset en secciones para tener mas datos.
 sampling_rate = 128     # En Hz
 segment_length = 150    # Ventana que se usa en el welch
-n_components = 3        # Cantidad de components para PCA
+n_components = 5        # Cantidad de components para PCA
 test_size = 0.2         # Relacion train-test para la red
 batch_size = 35         # Cantidad de datapoints para cada epoca
 epochs = 60             # Cantidad de epocas de training para la red
+lrp_class = 1           # Una de las 4 clases de datos (0, 1, 2, 3)
 ```
 A continuación se enuncia los pasos que sigue el programa:
 1. Descarga el dataset y lo guarda en el directorio `dataset`
